@@ -1,7 +1,9 @@
-const lodData = () => {
+const lodData = (istrue) => {
       fetch('./books.json')
             .then(res => res.json())
-            .then(data => displayData(data))
+            .then(data => {
+                  istrue ? displayData(data) : displayData(data.slice(0, 15))
+            })
 }
 lodData()
 
@@ -21,15 +23,18 @@ lodData()
 const displayData = (data) => {
 
 
+
       const booksContainer = document.getElementById('books-container')
+      booksContainer.innerHTML = ``
       data.forEach(book => {
             const { id, title, isbn, pageCount, authors } = book
             const bookCard = document.createElement('div')
-            bookCard.classList = "border rounded h-full w-full p-5 shadow-md flex flex-col justify-between"
+            bookCard.classList = "border rounded h-full w-full p-5 shadow-md flex flex-col justify-between gap-3"
             bookCard.innerHTML = `
               <h1 class=" text-xl font-bold">${title}</h1>
               <p class=" font-semibold">${pageCount ? `Pages : ${pageCount}` : ''}</p>
               <ul>
+              <h1 class=" font-bold">Authors:</h1>
                ${authors.map(item => `<li>${item}</li>`).join('')}
                  </ul>
               <div class=" flex justify-end   "> 
@@ -44,3 +49,10 @@ const displayData = (data) => {
       });
 
 }
+
+const sliceBtn = document.getElementById('see-more-btn')
+
+sliceBtn.addEventListener('click', function () {
+      lodData(true)
+      sliceBtn.classList = "hidden"
+})
